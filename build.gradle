@@ -1,0 +1,69 @@
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.23'
+}
+
+// Extracted versions
+def assertjVersion = '3.23.1'
+def junitJupiterVersion = '5.10.2'
+def playwrightVersion = '1.44.0'
+def kotlinLoggingVersion = '2.0.10'
+def testcontainersVersion = '1.19.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // logging
+    implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+
+    //------tests------//
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    //------ui------//
+    implementation "com.microsoft.playwright:playwright:$playwrightVersion"
+    // Testcontainers dependency
+    testImplementation "org.testcontainers:testcontainers:$testcontainersVersion"
+    testImplementation "org.testcontainers:junit-jupiter:$testcontainersVersion"
+    testImplementation "org.testcontainers:mysql:$testcontainersVersion"
+    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+//-------------------Playwright helper-------------
+
+// Commands:
+// 1. To open the Playwright Recorder, use the following command:
+//    `./gradlew run --args="open"`
+//
+// 2. To display the Trace viewer locally, use the following command
+//    Note: Replace {path/file_name}.zip with your specific file path.
+//    `./gradlew run --args="show-trace {path/file_name}.zip"`
+application {
+    mainClass.set('com.microsoft.playwright.CLI')
+}
