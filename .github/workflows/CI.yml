@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
 
@@ -38,11 +42,13 @@ jobs:
 
       - name: Wait for services to be ready
         run: |
-          while ! docker-compose exec -T timecoder-api curl -f http://localhost:8087; do
+          while ! docker-compose exec -T timecoder-api curl -f http://localhost:8089; do
             echo "Waiting for timecoder-api..."
             sleep 5
           done
         working-directory: ./docker
+        env:
+          DOCKER_HOST: tcp://localhost:2375
 
       - name: Run tests
         run: ./gradlew test
