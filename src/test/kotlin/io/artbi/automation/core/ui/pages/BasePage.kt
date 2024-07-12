@@ -1,4 +1,4 @@
-package io.artbi.automation.pageObjects
+package io.artbi.automation.core.ui.pages
 
 import com.microsoft.playwright.Page
 

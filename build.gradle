@@ -2,14 +2,17 @@ plugins {
     id 'application'
     id 'org.jetbrains.kotlin.jvm' version '1.9.23'
     id 'com.diffplug.spotless' version '6.0.4'
+    id 'io.freefair.aspectj.post-compile-weaving' version '8.6'
 }
 
 // Extracted versions
 def assertjVersion = '3.23.1'
-def junitJupiterVersion = '5.10.2'
+def junitJupiterVersion = '5.10.3'
 def playwrightVersion = '1.44.0'
 def kotlinLoggingVersion = '2.0.10'
 def testcontainersVersion = '1.19.8'
+def aspectjVersion = '1.9.22'
+def extentreportsVersion = '5.1.2'
 
 repositories {
     mavenCentral()
@@ -32,15 +35,14 @@ dependencies {
     testImplementation "org.testcontainers:junit-jupiter:$testcontainersVersion"
     testImplementation "org.testcontainers:mysql:$testcontainersVersion"
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+    // Reporter
+    implementation "com.aventstack:extentreports:$extentreportsVersion"
+    implementation "org.aspectj:aspectjrt:$aspectjVersion"
+    implementation "org.aspectj:aspectjweaver:$aspectjVersion"
 }
 
 test {
     useJUnitPlatform()
-//    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
-//    systemProperty 'junit.jupiter.execution.parallel.mode.default', 'same_thread'
-//    systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'concurrent'
-//    systemProperty 'junit.jupiter.execution.parallel.config.strategy', 'dynamic'
-//    systemProperty 'junit.jupiter.execution.parallel.config.dynamic.factor', '0.5'
 }
 
 kotlin {

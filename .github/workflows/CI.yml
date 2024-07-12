@@ -12,18 +12,38 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  JDK_VERSION: 21
+  JDK_DISTRIBUTION: temurin
+  NODE_VERSION: 20
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
 
     steps:
+      - name: 🔻 Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "${{ env.JDK_DISTRIBUTION }}"
+          java-version: "${{ env.JDK_VERSION }}"
+
+      - name: 🔻 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          token: '${{secrets.GITHUB_TOKEN}}'
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build the stack
         run: docker-compose -f docker-compose.yml up -d --build
         working-directory: ./docker
+
+      - name: Install Playwright dependencies
+        run: ./gradlew run --args="install --with-deps"
 
       - name: Run tests
         run: ./gradlew test

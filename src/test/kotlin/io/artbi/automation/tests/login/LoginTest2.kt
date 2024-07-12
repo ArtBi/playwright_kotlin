@@ -8,7 +8,7 @@ import mu.KLogging
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class LoginTest : PlaywrightTestFixture() {
+class LoginTest2 : PlaywrightTestFixture() {
 
     companion object : KLogging()
 
@@ -20,13 +20,13 @@ class LoginTest : PlaywrightTestFixture() {
     }
 
     @Test
-    fun testLogin() {
+    fun testLogin2() {
         app.loginPage.open()
         app.loginPage.login("admin", "123456")
 
         assertThat(app.mainPage.header.logoutButton).hasText("Logout")
         app.refresh()
         app.mainPage.header.logoutButton.click()
-        assertThat(app.loginPage.pageHeader).hasText("Login")
+        assertThat(app.loginPage.pageHeader).hasText("Loginn")
     }
 }
