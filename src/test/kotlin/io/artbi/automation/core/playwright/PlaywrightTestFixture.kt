@@ -14,7 +14,7 @@ import java.nio.file.Paths
 open class PlaywrightTestFixture {
 
     @BeforeEach
-    fun setupBrowserContext(testInfo: TestInfo, browserContext: BrowserContext) {
+    fun setupBrowserContext(browserContext: BrowserContext) {
         browserContext.tracing().start(getTracingOptions())
     }
 
@@ -23,7 +23,7 @@ open class PlaywrightTestFixture {
         .setSnapshots(true)
 
     @AfterEach
-    fun tearDownContext(testInfo: TestInfo, browserContext: BrowserContext){
+    fun tearDownContext(testInfo: TestInfo, browserContext: BrowserContext) {
         val traceName = getTraceName(testInfo)
         saveTraceReport(browserContext, traceName)
     }

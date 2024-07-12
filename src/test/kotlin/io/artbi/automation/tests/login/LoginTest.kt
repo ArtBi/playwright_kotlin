@@ -2,13 +2,13 @@ package io.artbi.automation.tests.login
 
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
-import io.artbi.automation.pageObjects.Application
 import io.artbi.automation.core.playwright.PlaywrightTestFixture
+import io.artbi.automation.pageObjects.Application
 import mu.KLogging
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class LoginTest: PlaywrightTestFixture() {
+class LoginTest : PlaywrightTestFixture() {
 
     companion object : KLogging()
 

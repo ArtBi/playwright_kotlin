@@ -1,6 +1,7 @@
 plugins {
     id 'application'
     id 'org.jetbrains.kotlin.jvm' version '1.9.23'
+    id 'com.diffplug.spotless' version '6.0.4'
 }
 
 // Extracted versions
@@ -35,6 +36,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+//    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
+//    systemProperty 'junit.jupiter.execution.parallel.mode.default', 'same_thread'
+//    systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'concurrent'
+//    systemProperty 'junit.jupiter.execution.parallel.config.strategy', 'dynamic'
+//    systemProperty 'junit.jupiter.execution.parallel.config.dynamic.factor', '0.5'
 }
 
 kotlin {
@@ -53,6 +59,23 @@ compileJava {
 
 compileTestJava {
     options.encoding = 'UTF-8'
+}
+
+spotless {
+    java {
+        googleJavaFormat() // Use Google Java Format
+        target 'src/**/*.java'
+    }
+    kotlin {
+        ktlint() // Use ktlint for Kotlin
+        target 'src/**/*.kt'
+    }
+    format 'misc', {
+        target '**/*.gradle', '**/*.md', '**/*.txt'
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
 }
 
 //-------------------Playwright helper-------------
