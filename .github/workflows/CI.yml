@@ -18,10 +18,12 @@ env:
   NODE_VERSION: 20
 
 jobs:
-  build:
-
+  playwright_tests:
+    timeout-minutes: 30
+    name: 'Playwright Tests'
     runs-on: ubuntu-latest
-
+    container:
+      image: mcr.microsoft.com/playwright/java:v1.45.0-jammy
     steps:
       - name: 🔻 Setup Java
         uses: actions/setup-java@v4
@@ -29,26 +31,17 @@ jobs:
           distribution: "${{ env.JDK_DISTRIBUTION }}"
           java-version: "${{ env.JDK_VERSION }}"
 
-      - name: 🔻 Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "${{ env.NODE_VERSION }}"
-          token: '${{secrets.GITHUB_TOKEN}}'
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build the stack
-        run: docker-compose -f docker-compose.yml up -d --build
-        working-directory: ./docker
-
-      - name: Install Playwright dependencies
-        run: ./gradlew run --args="install --with-deps"
-
       - name: Run tests
         run: ./gradlew test
+        env:
+          PLAYWRIGHT_HEADLESS: "true"
 
-      - name: Shut down Docker Compose
+      - uses: actions/upload-artifact@v4
         if: always()
-        working-directory: ./docker
-        run: docker-compose down
+        with:
+          name: reports
+          path: build/reports
+          retention-days: 5
