@@ -9,7 +9,8 @@ plugins {
 def assertjVersion = '3.23.1'
 def junitJupiterVersion = '5.10.3'
 def playwrightVersion = '1.44.0'
-def kotlinLoggingVersion = '2.0.10'
+def kotlinLoggingVersion = '2.1.23'
+def logbackClassicVersion = '1.2.9'
 def testcontainersVersion = '1.19.8'
 def aspectjVersion = '1.9.22'
 def extentreportsVersion = '5.1.2'
@@ -22,6 +23,7 @@ dependencies {
 
     // logging
     implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+    testImplementation("ch.qos.logback:logback-classic:$logbackClassicVersion")
 
     //------tests------//
     testImplementation "org.jetbrains.kotlin:kotlin-test"
@@ -37,8 +39,13 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java:8.0.33'
     // Reporter
     implementation "com.aventstack:extentreports:$extentreportsVersion"
+
     implementation "org.aspectj:aspectjrt:$aspectjVersion"
     implementation "org.aspectj:aspectjweaver:$aspectjVersion"
+
+    //----Utils----//
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
 }
 
 test {
@@ -83,12 +90,26 @@ spotless {
 //-------------------Playwright helper-------------
 
 // Commands:
-// 1. To open the Playwright Recorder, use the following command:
-//    `./gradlew run --args="open"`
-//
-// 2. To display the Trace viewer locally, use the following command
+// 1. To display the Trace viewer locally, use the following command
 //    Note: Replace {path/file_name}.zip with your specific file path.
 //    `./gradlew run --args="show-trace {path/file_name}.zip"`
 application {
     mainClass.set('com.microsoft.playwright.CLI')
 }
+
+tasks.register('openPlaywrightRecorder', Exec) {
+    description = 'Build and install without running tests'
+    commandLine 'gradle', 'run', '--args=open'
+}
+
+tasks.register('buildAndInstall', Exec) {
+    description = 'Build and install without running tests'
+    commandLine 'gradle', 'build', '-x', 'test'
+}
+
+tasks.register('installPlaywright', Exec) {
+    description = 'Install Playwright with dependencies'
+    commandLine 'gradle', 'run', '--args=install --with-deps'
+}
+
+installPlaywright.dependsOn(buildAndInstall)

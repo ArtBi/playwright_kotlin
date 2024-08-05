@@ -2,30 +2,41 @@ package io.artbi.automation.core.ui.pages
 
 import com.microsoft.playwright.Locator
 import com.microsoft.playwright.Page
+import com.microsoft.playwright.options.AriaRole
+import io.artbi.automation.core.reporter.Step
 
-class LoginPage(override val page: Page) : BasePage(page = page) {
-    val usernameField: Locator by lazy { page.getByLabel("Username") }
-    val passwordField: Locator by lazy { page.getByLabel("Password") }
-    val loginButton: Locator by lazy { page.locator("app-login  button") }
-    val pageHeader: Locator by lazy { page.locator("app-login h2") }
+class LoginPage(
+    override val page: Page,
+) : BasePage(page = page) {
+    private val pageHeader: Locator by lazy { page.getByRole(AriaRole.HEADING, Page.GetByRoleOptions().setName("Sign Up")) }
+    private val closeButton: Locator by lazy { page.locator("button[aria-label='Close']") }
+    private val loginLink: Locator by lazy { page.locator("auth-flow-link") }
+    private val loginField: Locator by lazy { page.locator("input[id='login-username']") }
+    private val passwordField: Locator by lazy { page.locator("input[id='login-password']") }
+    private val loginButton: Locator by lazy { page.locator("button[class *= 'login']") }
 
-    fun login(username: String, password: String) {
-        enterUsername(username)
-        enterPassword(password)
-        submit()
-    }
+    @Step("Get page header")
+    fun getLoginPageHeader(): Locator = pageHeader
 
-    fun enterUsername(username: String) {
-        usernameField.fill(username)
-    }
-
-    fun enterPassword(password: String) {
+    @Step("User login with: {0}, {1}")
+    fun login(
+        username: String,
+        password: String,
+    ) {
+        loginField.fill(username)
         passwordField.fill(password)
-    }
-
-    fun submit() {
         loginButton.click()
     }
 
-    override fun getPageUrl() = "login"
+    @Step("Close Login form")
+    fun closeLoginForm() {
+        closeButton.click()
+    }
+
+    @Step("Click on Log In link")
+    fun clickOnLogInLink() {
+        loginLink.click()
+    }
+
+    override fun getPageUrl(): String = "/login"
 }

@@ -16,7 +16,7 @@ This project is a template for using Playwright with Kotlin for end-to-end testi
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/playwright-kotlin.git
+   git clone https://github.com/artbi/playwright-kotlin.git
    cd playwright-kotlin
    ```
 
@@ -31,7 +31,7 @@ This project is a template for using Playwright with Kotlin for end-to-end testi
 1. **To open the Playwright Recorder**, use the following command:
 
    ```bash
-   ./gradlew run --args="open"
+   ./gradlew openPlaywrightRecorder
    ```
 
 2. **To display the Trace viewer locally**, use the following command:
